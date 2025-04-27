@@ -6,10 +6,10 @@ LUTRO_URL  = https://buildbot.libretro.com/nightly/linux/x86_64/latest/lutro_lib
 UNAME_S := $(shell uname -s)
 
 ifeq ($(UNAME_S),Darwin)
-    FRONTEND = /Applications/RetroArch.app/Contents/MacOS/RetroArch
-    LOVE = /Applications/love.app/Contents/MacOS/love
-	LUTRO_CORE = $(PWD)/lutro_libretro.dylib
-    LUTRO_URL = https://buildbot.libretro.com/nightly/apple/osx/arm64/latest/lutro_libretro.dylib.zip
+    FRONTEND   = /Applications/RetroArch.app/Contents/MacOS/RetroArch
+    LOVE       = /Applications/love.app/Contents/MacOS/love
+    LUTRO_CORE = $(PWD)/lutro_libretro.dylib
+    LUTRO_URL  = https://buildbot.libretro.com/nightly/apple/osx/arm64/latest/lutro_libretro.dylib.zip
 endif
 
 run/love:
@@ -17,6 +17,10 @@ run/love:
 
 run/core:
 	${FRONTEND} -L ${LUTRO_CORE} .
+
+# cargo install stylua
+format:
+	stylua *.lua
 
 get/lutro-core:
 	wget -O lutro_libretro.zip ${LUTRO_URL}
