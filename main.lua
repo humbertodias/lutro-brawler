@@ -1,3 +1,7 @@
+if lutro then
+    love = lutro
+end
+
 local Fighter = require("fighter")
 
 -- Game settings
