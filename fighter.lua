@@ -1,6 +1,22 @@
 local Fighter = {}
 Fighter.__index = Fighter
 
+local Actions = {
+    IDLE = 1,
+    RUN = 2,
+    JUMP = 3,
+    ATTACK1 = 4,
+    ATTACK2 = 5,
+    HIT = 6,
+    DEATH = 7
+}
+
+local AttackType = {
+	NONE = 0,
+	ATTACK1 = 1,
+	ATTACK2 = 2
+}
+
 function Fighter.new(player, x, y, flip, data, sprite_sheet, attack_sound)
 	local self = setmetatable({}, Fighter)
 
@@ -14,7 +30,7 @@ function Fighter.new(player, x, y, flip, data, sprite_sheet, attack_sound)
 	self.flip = flip
 
 	self.animations = Fighter.load_animations(self)
-	self.action = 1
+	self.action = Actions.IDLE
 	self.frame_index = 1
 	self.frame_timer = 0
 	self.image = self.animations[self.action][self.frame_index]
@@ -24,7 +40,7 @@ function Fighter.new(player, x, y, flip, data, sprite_sheet, attack_sound)
 	self.running = false
 	self.jump = false
 	self.attacking = false
-	self.attack_type = 0
+	self.attack_type = AttackType.NONE
 	self.attack_cooldown = 0
 	self.hit = false
 	self.health = 100
@@ -54,7 +70,7 @@ function Fighter:move(screen_width, screen_height, target, round_over)
 	local dx, dy = 0, 0
 
 	self.running = false
-	self.attack_type = 0
+	self.attack_type = AttackType.NONE
 
 	-- Only allow movement and actions if not attacking and round is not over
 	if not self.attacking and self.alive and not round_over then
@@ -73,9 +89,9 @@ function Fighter:move(screen_width, screen_height, target, round_over)
 			if love.keyboard.isDown('r') or love.keyboard.isDown('t') then
 				self:attack(target)
 				if love.keyboard.isDown('r') then
-					self.attack_type = 1
+					self.attack_type = AttackType.ATTACK1
 				elseif love.keyboard.isDown('t') then
-					self.attack_type = 2
+					self.attack_type = AttackType.ATTACK2
 				end
 			end
 		elseif self.player == 2 then
@@ -93,9 +109,9 @@ function Fighter:move(screen_width, screen_height, target, round_over)
 			if love.keyboard.isDown('kp1') or love.keyboard.isDown('kp2') then
 				self:attack(target)
 				if love.keyboard.isDown('kp1') then
-					self.attack_type = 1
+					self.attack_type = AttackType.ATTACK1
 				elseif love.keyboard.isDown('kp2') then
-					self.attack_type = 2
+					self.attack_type = AttackType.ATTACK2
 				end
 			end
 		end
@@ -135,21 +151,21 @@ end
 function Fighter:update()
 	if self.health <= 0 then
 		self.alive = false
-		self:update_action(7)
+		self:update_action(Actions.DEATH)
 	elseif self.hit then
-		self:update_action(6)
+		self:update_action(Actions.HIT)
 	elseif self.attacking then
-		if self.attack_type == 1 then
-			self:update_action(4)
-		elseif self.attack_type == 2 then
-			self:update_action(5)
+		if self.attack_type == AttackType.ATTACK1 then
+			self:update_action(Actions.ATTACK1)
+		elseif self.attack_type == AttackType.ATTACK2 then
+			self:update_action(Actions.ATTACK2)
 		end
 	elseif self.jump then
-		self:update_action(3)
+		self:update_action(Actions.JUMP)
 	elseif self.running then
-		self:update_action(2)
+		self:update_action(Actions.RUN)
 	else
-		self:update_action(1)
+		self:update_action(Actions.IDLE)
 	end
 
 	self.frame_timer = self.frame_timer + love.timer.getDelta()
@@ -161,10 +177,10 @@ function Fighter:update()
 				self.frame_index = #self.animations[self.action]
 			else
 				self.frame_index = 1
-				if self.action == 4 or self.action == 5 then
+				if self.action == Actions.ATTACK1 or self.action == Actions.ATTACK2 then
 					self.attacking = false
 					self.attack_cooldown = 20
-				elseif self.action == 6 then
+				elseif self.action == Actions.HIT then
 					self.hit = false
 					self.attacking = false
 					self.attack_cooldown = 20
