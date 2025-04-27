@@ -135,6 +135,12 @@ function love.draw()
 	end
 end
 
+function love.keypressed(key)
+	if key == 'escape' then
+		love.event.quit()
+	end
+end
+
 function draw_bg()
 	love.graphics.draw(bg_image, 0, 0, 0, SCREEN_WIDTH / bg_image:getWidth(), SCREEN_HEIGHT / bg_image:getHeight())
 end
