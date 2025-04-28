@@ -4,6 +4,8 @@ A **Street Fighter** clone made in **Lua**, adapted to run on both [Love2D](http
 
 ![Gameplay Screenshot](https://github.com/user-attachments/assets/d5fee812-c1bf-459a-9e25-034702be62af)
 
+Assets [fantasy-warrior](https://luizmelo.itch.io/fantasy-warrior) | [evil-wizard-2](https://luizmelo.itch.io/evil-wizard-2)
+
 
 ## Controls
 
@@ -20,6 +22,7 @@ A **Street Fighter** clone made in **Lua**, adapted to run on both [Love2D](http
 | Move     | Arrow Keys (↑ ↓ ← →)        |
 | Action 1 | Numpad 1                    |
 | Action 2 | Numpad 2                    |
+
 
 ## Running the Game
 
