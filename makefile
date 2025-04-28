@@ -43,5 +43,5 @@ format:
 
 get/lutro-core:
 	wget -O lutro_libretro.zip $(LUTRO_URL)
-	unzip lutro_libretro.zip
+	unzip -o lutro_libretro.zip
 	rm lutro_libretro.zip
