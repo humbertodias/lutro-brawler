@@ -2,7 +2,8 @@
 -- Brawler Game
 
 require('global')
-local Fighter = require('fighter')
+Fighter = require('fighter')
+Input = require('input')
 
 -- Game settings
 local introCount = 3
@@ -45,7 +46,6 @@ function love.load()
 	love.window.setMode(SCREEN_WIDTH, SCREEN_HEIGHT, { fullscreen = false, resizable = true, centered = true })
 	love.graphics.setBackgroundColor(0, 0, 0)
 	love.graphics.setDefaultFilter('nearest', 'nearest')
-
 
 	-- Load assets
 	bgImage = love.graphics.newImage('assets/images/background/background-640x480.png')

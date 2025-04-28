@@ -1,8 +1,6 @@
 local Fighter = {}
 Fighter.__index = Fighter
 
-Input = require('input')
-
 local Actions = {
 	IDLE = 1,
 	RUN = 2,
