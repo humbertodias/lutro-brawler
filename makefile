@@ -23,11 +23,17 @@ endif
 run/love:
 	$(LOVE) .
 
-run/core:
+run/lutro:
 	$(FRONTEND) -L $(LUTRO_CORE) .
 
 lutro:
 	zip -9 -r brawler.lutro ./*
+
+js:
+	echo "EMSDK:$(EMSDK)"
+	source ${EMSDK}/emsdk_env.sh
+	emsdk install binaryen-main-64bit
+	python3 ${EMSDK}/upstream/emscripten/tools/file_packager.py brawler.data --preload ./lutro --js-output=brawler.js	
 
 clean:
 	rm -f brawler.lutro

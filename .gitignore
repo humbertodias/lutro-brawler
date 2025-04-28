@@ -42,3 +42,6 @@ luac.out
 .idea
 *.lutro
 *.zip
+
+*.data
+*.js
