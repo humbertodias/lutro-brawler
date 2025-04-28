@@ -27,7 +27,7 @@ run/lutro:
 	$(FRONTEND) -L $(LUTRO_CORE) .
 
 lutro:
-	zip -9 -r brawler.lutro ./*
+	zip -9 -r brawler.lutro ./assets ./*.lua
 
 js:
 	echo "EMSDK:$(EMSDK)"
