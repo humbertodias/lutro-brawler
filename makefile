@@ -24,7 +24,10 @@ run/love:
 	$(LOVE) .
 
 run/lutro:
-	$(FRONTEND) -L $(LUTRO_CORE) .
+	$(FRONTEND) -v -L $(LUTRO_CORE) .
+
+run/lutro-debug:
+	gdb --args $(FRONTEND) -v -L $(LUTRO_CORE) .
 
 lutro:
 	zip -9 -r brawler.lutro ./assets ./*.lua
