@@ -31,8 +31,8 @@ local fighter1
 local fighter2
 
 -- Fighter data
-local WARRIOR_DATA = { size = 162, scale = 4, offset = { 72, 56 }, steps = { 10, 8, 1, 7, 7, 3, 7 } }
-local WIZARD_DATA = { size = 250, scale = 3, offset = { 112, 107 }, steps = { 8, 8, 1, 8, 8, 3, 7 } }
+local WARRIOR_DATA = { size = 162, scale = 4, offset = { 72, 50 }, steps = { 10, 8, 1, 7, 7, 3, 7 } }
+local WIZARD_DATA = { size = 250, scale = 3, offset = { 112, 100 }, steps = { 8, 8, 1, 8, 8, 3, 7 } }
 
 local fighter1StartPos = { x = 128, y = 190 }
 local fighter2StartPos = { x = 448, y = 190 }

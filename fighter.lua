@@ -194,7 +194,7 @@ end
 function Fighter:draw()
 	local quad = self.animations[self.action][self.frame_index]
 	local x = (self.rect.x - self.offset[1] * self.scale) 
-	local y = (self.rect.y - self.offset[2] * self.scale) + 35
+	local y = (self.rect.y - self.offset[2] * self.scale)
 	local r = 0
 	local sx = self.scale * (self.flip and -1 or 1)
 	local sy = self.scale
