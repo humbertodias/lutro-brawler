@@ -23,14 +23,6 @@ A **Street Fighter** clone made in **Lua**, adapted to run on both [Love2D](http
 
 ## Running the Game
 
-### 1. Download the Lutro Core (for RetroArch)
-If needed, download the **lutro** core:
-```shell
-make get/lutro-core
-```
-
-### 2. Run the Game
-
 **With Love2D:**
 ```shell
 make run/love
@@ -39,6 +31,11 @@ make run/love
 **With Lutro:**
 ```shell
 make run/lutro
+```
+
+If needed, download the **lutro** core:
+```shell
+make get/lutro-core
 ```
 
 ## References
