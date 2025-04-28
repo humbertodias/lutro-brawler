@@ -46,6 +46,8 @@ local scale_x
 local scale_y
 
 function love.load()
+	
+    -- uncomment the following lines to enable the debug on zerobrane studio
 	-- if arg[#arg] == '-debug' then
 	-- 	require('mobdebug').start()
 	-- end

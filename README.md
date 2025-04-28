@@ -6,6 +6,7 @@ Street Fighter Clone Made in Lua and adpted to run on [love2d](https://love2d.or
 
 ## Run 
 
+love2d
 ```shell
 make run/love
 ```
