@@ -4,6 +4,13 @@ Street Fighter Clone Made in Lua and adpted to run on [love2d](https://love2d.or
 
 ![image](https://github.com/user-attachments/assets/d5fee812-c1bf-459a-9e25-034702be62af)
 
+## Retroarch core
+
+Download the lutro core. if necessary
+```shell
+make get/lutro-core
+```
+
 ## Run 
 
 love2d
