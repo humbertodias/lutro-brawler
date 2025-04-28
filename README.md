@@ -4,6 +4,25 @@ Street Fighter Clone Made in Lua and adpted to run on [love2d](https://love2d.or
 
 ![image](https://github.com/user-attachments/assets/d5fee812-c1bf-459a-9e25-034702be62af)
 
+# Controls Mapping
+
+## Player 1 (P1)
+
+| Action        | Key(s) |
+|---------------|--------|
+| Move          | W A S D|
+| Action 1      | R      |
+| Action 2      | T      |
+
+## Player 2 (P2)
+
+| Action        | Key(s)               |
+|---------------|----------------------|
+| Move          | Arrow Keys (↑ ↓ ← →) |
+| Action 1      | Numpad 1             |
+| Action 2      | Numpad 2             |
+
+
 ## Retroarch core
 
 Download the lutro core. if necessary
