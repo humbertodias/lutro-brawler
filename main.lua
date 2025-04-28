@@ -13,8 +13,6 @@ local roundOverTime = 0
 
 local ROUND_OVER_COOLDOWN = 2
 
-
-
 -- Assets
 local bgImage
 local bgScaleX, bgScaleY
@@ -38,118 +36,121 @@ local fighter1StartPos = { x = 128, y = 190 }
 local fighter2StartPos = { x = 448, y = 190 }
 
 function love.conf(t)
-    t.width = SCREEN_WIDTH
-    t.height = SCREEN_HEIGHT
+	t.width = SCREEN_WIDTH
+	t.height = SCREEN_HEIGHT
 end
 
 function love.load()
-    love.window.setTitle('Brawler')
-    love.window.setMode(SCREEN_WIDTH, SCREEN_HEIGHT, { fullscreen = false, resizable = true, centered = true })
-    love.graphics.setBackgroundColor(0, 0, 0)
-    love.graphics.setDefaultFilter('nearest', 'nearest')
+	love.window.setTitle('Brawler')
+	love.window.setMode(SCREEN_WIDTH, SCREEN_HEIGHT, { fullscreen = false, resizable = true, centered = true })
+	love.graphics.setBackgroundColor(0, 0, 0)
+	love.graphics.setDefaultFilter('nearest', 'nearest')
 
-    -- Load assets
-    bgImage = love.graphics.newImage('assets/images/background/background-640x480.png')
-    bgScaleX = SCREEN_WIDTH / bgImage:getWidth()
-    bgScaleY = SCREEN_HEIGHT / bgImage:getHeight()
 
-    warriorSheet = love.graphics.newImage('assets/images/warrior/Sprites/warrior.png')
-    wizardSheet = love.graphics.newImage('assets/images/wizard/Sprites/wizard.png')
-    victoryImage = love.graphics.newImage('assets/images/icons/victory.png')
+	-- Load assets
+	bgImage = love.graphics.newImage('assets/images/background/background-640x480.png')
+	bgScaleX = SCREEN_WIDTH / bgImage:getWidth()
+	bgScaleY = SCREEN_HEIGHT / bgImage:getHeight()
 
-    swordSound = love.audio.newSource('assets/audio/sword.wav', 'static')
-    magicSound = love.audio.newSource('assets/audio/magic.wav', 'static')
+	warriorSheet = love.graphics.newImage('assets/images/warrior/Sprites/warrior.png')
+	wizardSheet = love.graphics.newImage('assets/images/wizard/Sprites/wizard.png')
+	victoryImage = love.graphics.newImage('assets/images/icons/victory.png')
 
-    local music = love.audio.newSource('assets/audio/music.ogg', 'stream')
-    music:setVolume(0.5)
-    music:setLooping(true)
-    music:play()
+	swordSound = love.audio.newSource('assets/audio/sword.wav', 'static')
+	magicSound = love.audio.newSource('assets/audio/magic.wav', 'static')
 
-    countFont = love.graphics.newImageFont('assets/fonts/turok.png', ' ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789*:|=-<>./\'"+$')
-    scoreFont = love.graphics.newImageFont('assets/fonts/turok.png', ' ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789*:|=-<>./\'"+$')
+	local music = love.audio.newSource('assets/audio/music.ogg', 'stream')
+	music:setVolume(0.5)
+	music:setLooping(true)
+	music:play()
 
-    startNewRound()
+	-- lettersFont = love.graphics.newImageFont('assets/fonts/letters.png', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789.!?')
+	local pointsFont = love.graphics.newImageFont('assets/fonts/points.png', '0123456789')
+	countFont = pointsFont
+	scoreFont = pointsFont
+
+	startNewRound()
 end
 
 function love.update(dt)
-    if introCount <= 0 then
-        fighter1:move(SCREEN_WIDTH, SCREEN_HEIGHT, fighter2)
-        fighter2:move(SCREEN_WIDTH, SCREEN_HEIGHT, fighter1)
+	if introCount <= 0 then
+		fighter1:move(SCREEN_WIDTH, SCREEN_HEIGHT, fighter2)
+		fighter2:move(SCREEN_WIDTH, SCREEN_HEIGHT, fighter1)
 
-        fighter1:update()
-        fighter2:update()
-    else
-        if love.timer.getTime() - lastCountUpdate >= 1 then
-            introCount = introCount - 1
-            lastCountUpdate = love.timer.getTime()
-        end
-    end
+		fighter1:update()
+		fighter2:update()
+	else
+		if love.timer.getTime() - lastCountUpdate >= 1 then
+			introCount = introCount - 1
+			lastCountUpdate = love.timer.getTime()
+		end
+	end
 
-    checkRoundOver()
+	checkRoundOver()
 end
 
 function love.draw()
-    love.graphics.setColor(COLORS.WHITE)
-    drawBackground()
+	love.graphics.setColor(COLORS.WHITE)
+	drawBackground()
 
-    drawHealthBar(fighter1.health, 20, 20)
-    drawHealthBar(fighter2.health, SCREEN_WIDTH - 276, 20) -- 256 + 20 margin
+	drawHealthBar(fighter1.health, 20, 20)
+	drawHealthBar(fighter2.health, SCREEN_WIDTH - 276, 20) -- 256 + 20 margin
 
-    fighter1:draw()
-    fighter2:draw()
+	fighter1:draw()
+	fighter2:draw()
 
-    love.graphics.setFont(scoreFont)
-    love.graphics.setColor(COLORS.RED)
-    love.graphics.print(score[1] .. ' - ' .. score[2], (SCREEN_WIDTH / 2) - 15, 30)
+	love.graphics.setFont(scoreFont)
+	love.graphics.setColor(COLORS.RED)
+	love.graphics.print(score[1] .. ' - ' .. score[2], (SCREEN_WIDTH / 2), 30)
 
-    if introCount > 0 then
-        love.graphics.setFont(countFont)
-        love.graphics.print(introCount, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 3)
-    elseif roundOver then
-        love.graphics.draw(victoryImage, SCREEN_WIDTH / 2 - victoryImage:getWidth() / 2, SCREEN_HEIGHT / 3)
-    end
+	if introCount > 0 then
+		love.graphics.setFont(countFont)
+		love.graphics.print(introCount, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 3)
+	elseif roundOver then
+		love.graphics.draw(victoryImage, SCREEN_WIDTH / 2 - victoryImage:getWidth() / 2, SCREEN_HEIGHT / 3)
+	end
 end
 
 function drawBackground()
-    love.graphics.draw(bgImage, 0, 0, 0, bgScaleX, bgScaleY)
+	love.graphics.draw(bgImage, 0, 0, 0, bgScaleX, bgScaleY)
 end
 
 function drawHealthBar(health, x, y)
-    local barWidth = 256
-    local barHeight = 19
-    local ratio = math.max(health / 100, 0)
+	local barWidth = 256
+	local barHeight = 19
+	local ratio = math.max(health / 100, 0)
 
-    love.graphics.setColor(COLORS.WHITE)
-    love.graphics.rectangle('fill', x - 2, y - 2, barWidth + 4, barHeight + 4)
+	love.graphics.setColor(COLORS.WHITE)
+	love.graphics.rectangle('fill', x - 2, y - 2, barWidth + 4, barHeight + 4)
 
-    love.graphics.setColor(COLORS.RED)
-    love.graphics.rectangle('fill', x, y, barWidth, barHeight)
+	love.graphics.setColor(COLORS.RED)
+	love.graphics.rectangle('fill', x, y, barWidth, barHeight)
 
-    love.graphics.setColor(COLORS.YELLOW)
-    love.graphics.rectangle('fill', x, y, barWidth * ratio, barHeight)
+	love.graphics.setColor(COLORS.YELLOW)
+	love.graphics.rectangle('fill', x, y, barWidth * ratio, barHeight)
 
-    love.graphics.setColor(COLORS.WHITE)
+	love.graphics.setColor(COLORS.WHITE)
 end
 
 function startNewRound()
-    fighter1 = Fighter.new(1, fighter1StartPos.x, fighter1StartPos.y, false, WARRIOR_DATA, warriorSheet, swordSound)
-    fighter2 = Fighter.new(2, fighter2StartPos.x, fighter2StartPos.y, true, WIZARD_DATA, wizardSheet, magicSound)
+	fighter1 = Fighter.new(1, fighter1StartPos.x, fighter1StartPos.y, false, WARRIOR_DATA, warriorSheet, swordSound)
+	fighter2 = Fighter.new(2, fighter2StartPos.x, fighter2StartPos.y, true, WIZARD_DATA, wizardSheet, magicSound)
 end
 
 function checkRoundOver()
-    if not roundOver then
-        if not fighter1.alive then
-            score[2] = score[2] + 1
-            roundOver = true
-            roundOverTime = love.timer.getTime()
-        elseif not fighter2.alive then
-            score[1] = score[1] + 1
-            roundOver = true
-            roundOverTime = love.timer.getTime()
-        end
-    elseif love.timer.getTime() - roundOverTime > ROUND_OVER_COOLDOWN then
-        roundOver = false
-        introCount = 3
-        startNewRound()
-    end
+	if not roundOver then
+		if not fighter1.alive then
+			score[2] = score[2] + 1
+			roundOver = true
+			roundOverTime = love.timer.getTime()
+		elseif not fighter2.alive then
+			score[1] = score[1] + 1
+			roundOver = true
+			roundOverTime = love.timer.getTime()
+		end
+	elseif love.timer.getTime() - roundOverTime > ROUND_OVER_COOLDOWN then
+		roundOver = false
+		introCount = 3
+		startNewRound()
+	end
 end
