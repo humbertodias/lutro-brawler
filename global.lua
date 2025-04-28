@@ -1,0 +1,8 @@
+SCREEN_WIDTH = 640
+SCREEN_HEIGHT = 480
+
+COLORS = {
+	RED = { 255, 0, 0 },
+	YELLOW = { 255, 255, 0 },
+	WHITE = { 255, 255, 255 },
+}

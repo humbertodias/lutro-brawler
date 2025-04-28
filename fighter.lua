@@ -1,20 +1,22 @@
 local Fighter = {}
 Fighter.__index = Fighter
 
+Input = require('input')
+
 local Actions = {
-    IDLE = 1,
-    RUN = 2,
-    JUMP = 3,
-    ATTACK1 = 4,
-    ATTACK2 = 5,
-    HIT = 6,
-    DEATH = 7
+	IDLE = 1,
+	RUN = 2,
+	JUMP = 3,
+	ATTACK1 = 4,
+	ATTACK2 = 5,
+	HIT = 6,
+	DEATH = 7,
 }
 
 local AttackType = {
 	NONE = 0,
 	ATTACK1 = 1,
-	ATTACK2 = 2
+	ATTACK2 = 2,
 }
 
 function Fighter.new(player, x, y, flip, data, sprite_sheet, attack_sound)
@@ -74,46 +76,21 @@ function Fighter:move(screen_width, screen_height, target, round_over)
 
 	-- Only allow movement and actions if not attacking and round is not over
 	if not self.attacking and self.alive and not round_over then
-		if self.player == 1 then
-			if love.keyboard.isDown('a') then
-				dx = -SPEED
-				self.running = true
-			elseif love.keyboard.isDown('d') then
-				dx = SPEED
-				self.running = true
-			end
-			if love.keyboard.isDown('w') and not self.jump then
-				self.vel_y = -900
-				self.jump = true
-			end
-			if love.keyboard.isDown('r') or love.keyboard.isDown('t') then
-				self:attack(target)
-				if love.keyboard.isDown('r') then
-					self.attack_type = AttackType.ATTACK1
-				elseif love.keyboard.isDown('t') then
-					self.attack_type = AttackType.ATTACK2
-				end
-			end
-		elseif self.player == 2 then
-			if love.keyboard.isDown('left') then
-				dx = -SPEED
-				self.running = true
-			elseif love.keyboard.isDown('right') then
-				dx = SPEED
-				self.running = true
-			end
-			if love.keyboard.isDown('up') and not self.jump then
-				self.vel_y = -900
-				self.jump = true
-			end
-			if love.keyboard.isDown('kp1') or love.keyboard.isDown('kp2') then
-				self:attack(target)
-				if love.keyboard.isDown('kp1') then
-					self.attack_type = AttackType.ATTACK1
-				elseif love.keyboard.isDown('kp2') then
-					self.attack_type = AttackType.ATTACK2
-				end
-			end
+		local move_dir = Input.getMovement(self.player)
+		if move_dir ~= 0 then
+			dx = SPEED * move_dir
+			self.running = true
+		end
+
+		if Input.isJumpPressed(self.player) and not self.jump then
+			self.vel_y = -900
+			self.jump = true
+		end
+
+		local attack = Input.getAttackType(self.player)
+		if attack ~= AttackType.NONE then
+			self:attack(target)
+			self.attack_type = attack
 		end
 	end
 
@@ -216,19 +193,18 @@ end
 
 function Fighter:draw()
 	local quad = self.animations[self.action][self.frame_index]
+	local x = (self.rect.x - self.offset[1] * self.scale) 
+	local y = (self.rect.y - self.offset[2] * self.scale) + 35
+	local r = 0
 	local sx = self.scale * (self.flip and -1 or 1)
+	local sy = self.scale
 	local ox = self.flip and self.size or 0
-	love.graphics.draw(
-		self.sprite_sheet,
-		quad,
-		self.rect.x - self.offset[1] * self.scale,
-		self.rect.y - self.offset[2] * self.scale,
-		0,
-		sx,
-		self.scale,
-		ox,
-		0
-	)
+	local oy = 0
+	print('quad', quad, 'x', x, 'y', y, 'sx', sx, 'sy', sy, 'ox', ox, 'oy', oy)
+
+	love.graphics.rectangle('fill', 0, 0, 100, 00)
+
+	love.graphics.draw(self.sprite_sheet, quad, x, y, r, sx, sy, ox, oy)
 end
 
 function Fighter:check_collision(a, b)
