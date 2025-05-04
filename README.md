@@ -23,6 +23,19 @@ Assets [fantasy-warrior](https://luizmelo.itch.io/fantasy-warrior) | [evil-wizar
 | Action 1 | Numpad 1                    |
 | Action 2 | Numpad 2                    |
 
+### Joystick Support
+
+When a gamepad is connected, it will override keyboard input:
+
+| Gamepad Button | Mapped Action     |
+|----------------|-------------------|
+| A              | Jump              |
+| X              | Action 1          |
+| Y              | Action 2          |
+| D-Pad ← →      | Move              |
+
+Supports standard gamepads compatible with Love2D's [Gamepad API](https://love2d.org/wiki/Gamepad).
+
 
 ## Running the Game
 
