@@ -1,6 +1,7 @@
 # Paths
 FRONTEND    := $(shell which retroarch)
 LOVE        := $(shell which love)
+DOCKER      := $(shell which docker)
 UNAME_S     := $(shell uname -s)
 ARCH        := $(shell uname -m)
 PWD         := $(shell pwd)
@@ -56,11 +57,11 @@ get/lutro-core:
 	rm lutro_libretro.zip
 
 wasm/build:	lutro
-	docker build . --build-arg GAME_ROM=brawler-$(TAG_NAME).lutro -t wasm
-	docker run -i -v $(PWD):/outside wasm sh -c 'cp -r /workdir/lotr/example /outside'
+	$(DOCKER) build . --build-arg GAME_ROM=brawler-$(TAG_NAME).lutro -t wasm
+	$(DOCKER) run -i -v $(PWD):/outside wasm sh -c 'cp -r /workdir/lotr/example /outside'
 
 wasm:	wasm/build
-	(cd example && zip -9 -r ../brawler-$(TAG_NAME).zip vendors/ brawler.* lutro_libretro.* index.html)
+	(cd example && zip -9 -r ../brawler-$(TAG_NAME).zip vendors/ brawler.* lutro_libretro.* main.js index.html)
 
 wasm/serve:
 	python -m http.server 8000 --directory ./example
