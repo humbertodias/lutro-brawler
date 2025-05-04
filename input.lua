@@ -60,4 +60,21 @@ function input.getAttackType(player)
 	return 0
 end
 
+local lastEscPressTime = 0
+local escPressInterval = 0.5
+function love.keypressed(key)
+	if key == 'f1' then
+		DEBUG = not DEBUG
+	end
+	if isLove() then
+		if key == 'escape' then
+			local now = love.timer.getTime()
+			if now - lastEscPressTime < escPressInterval then
+				love.event.quit()
+			end
+			lastEscPressTime = now
+		end
+	end
+end
+
 return input
