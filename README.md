@@ -34,7 +34,7 @@ When a gamepad is connected, it will override keyboard input:
 | Y              | Action 2          |
 | D-Pad ← →      | Move              |
 
-Supports standard gamepads compatible with Love2D's [Gamepad API](https://love2d.org/wiki/Gamepad).
+Supports standard gamepads compatible with Love2D's [Gamepad API](https://love2d.org/wiki/Joystick:isGamepad) and Lutro [Joystick](https://lutro.libretro.com/doc/love.joystick.html).
 
 
 ## Running the Game
