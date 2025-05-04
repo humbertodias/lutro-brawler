@@ -46,10 +46,6 @@ if love.joystick and love.joystick.getJoysticks then
 end
 
 local function joyIsDown(player, buttonId)
-	if isLutro() then
-		return love.joystick.isDown(player, buttonId)
-	end
-
 	local j = joysticks[player]
 	if not j then
 		return false
@@ -58,6 +54,10 @@ local function joyIsDown(player, buttonId)
 	if j:isGamepad() then
 		local mapped = GAMEPAD_MAP[buttonId]
 		return mapped and j:isGamepadDown(mapped)
+	end
+
+	if isLutro() then
+		return love.joystick.isDown(player, buttonId)
 	end
 
 	return false
@@ -95,10 +95,13 @@ end
 
 local lastEscPressTime = 0
 local escPressInterval = 0.5
+function toggleDebug()
+	DEBUG = not DEBUG
+end
 
 function love.keypressed(key)
 	if key == 'f1' then
-		DEBUG = not DEBUG
+		toggleDebug()
 	end
 	if isLove() and key == 'escape' then
 		local now = love.timer.getTime()
