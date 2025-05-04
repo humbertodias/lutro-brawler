@@ -229,16 +229,13 @@ function Fighter:draw()
 
 	-- TODO: This should behave the same as in LÖVE2D
 	if isLutro() then
-		xx = 80
-		yy = 80
-		if self.player == 2 then
-			xx = 120
-			yy = 126
-		end
-		love.graphics.draw(self.sprite_sheet, quad, x - xx, y - yy, r, sx, sy)
-	else
-		love.graphics.draw(self.sprite_sheet, quad, x, y, r, sx, sy, ox, oy)
+		ox, oy = 1, 1
+		local xx = self.player == 2 and 120 or 80
+		local yy = self.player == 2 and 126 or 80
+		x = x - xx
+		y = y - yy
 	end
+	love.graphics.draw(self.sprite_sheet, quad, x, y, r, sx, sy, ox, oy)
 end
 
 function Fighter:check_collision(a, b)
