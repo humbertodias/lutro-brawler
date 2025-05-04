@@ -128,6 +128,11 @@ function Fighter:move(screen_width, screen_height, target, round_over)
 	self.rect.y = self.rect.y + dy
 end
 
+local action_map = {
+	[AttackType.ATTACK1] = Actions.ATTACK1,
+	[AttackType.ATTACK2] = Actions.ATTACK2,
+}
+
 function Fighter:update()
 	-- Update action based on state
 	if self.health <= 0 then
@@ -136,8 +141,10 @@ function Fighter:update()
 	elseif self.hit then
 		self:update_action(Actions.HIT)
 	elseif self.attacking then
-		local attack_action = (self.attack_type == AttackType.ATTACK1) and Actions.ATTACK1 or Actions.ATTACK2
-		self:update_action(attack_action)
+		local action = action_map[self.attack_type]
+		if action then
+			self:update_action(action)
+		end
 	elseif self.jump then
 		self:update_action(Actions.JUMP)
 	elseif self.running then
