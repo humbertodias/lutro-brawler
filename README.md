@@ -1,3 +1,5 @@
+[![CD](https://github.com/humbertodias/lutro-brawler/actions/workflows/cd.yml/badge.svg)](https://github.com/humbertodias/lutro-brawler/actions/workflows/cd.yml)
+
 # 🥊 Lutro Brawler
 
 A **Street Fighter**-style 2D fighting game built with **Lua**, compatible with both [Love2D](https://love2d.org) and [Lutro](http://lutro.libretro.com).
