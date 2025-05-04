@@ -30,11 +30,11 @@ local fighter1
 local fighter2
 
 -- Fighter data
-local WARRIOR_DATA = { size = 162, scale = 4, offset = { 72, 50 }, steps = { 10, 8, 1, 7, 7, 3, 7 } }
-local WIZARD_DATA = { size = 250, scale = 3, offset = { 112, 100 }, steps = { 8, 8, 1, 8, 8, 3, 7 } }
+local WARRIOR_DATA = { size = 162, scale = 4, offset = { -40, -80 }, steps = { 10, 8, 1, 7, 7, 3, 7 } }
+local WIZARD_DATA = { size = 250, scale = 3, offset = { -40, -60 }, steps = { 8, 8, 1, 8, 8, 3, 7 } }
 
-local fighter1StartPos = { x = 128, y = 190 }
-local fighter2StartPos = { x = 448, y = 190 }
+local fighter1StartPos = { x = 40, y = 95 }
+local fighter2StartPos = { x = 200, y = 95 }
 
 function love.conf(t)
 	t.width = SCREEN_WIDTH
@@ -42,13 +42,15 @@ function love.conf(t)
 end
 
 function love.load()
+	--   if arg[#arg] == "-debug" then require("mobdebug").start() end
+
 	love.window.setTitle('Brawler')
 	love.window.setMode(SCREEN_WIDTH, SCREEN_HEIGHT, { fullscreen = false, resizable = true, centered = true })
 	love.graphics.setBackgroundColor(0, 0, 0)
 	love.graphics.setDefaultFilter('nearest', 'nearest')
 
 	-- Load assets
-	bgImage = love.graphics.newImage('assets/images/background/background-640x480.png')
+	bgImage = love.graphics.newImage('assets/images/background/background-320x240.png')
 	bgScaleX = SCREEN_WIDTH / bgImage:getWidth()
 	bgScaleY = SCREEN_HEIGHT / bgImage:getHeight()
 
@@ -64,10 +66,11 @@ function love.load()
 	music:setLooping(true)
 	music:play()
 
-	-- lettersFont = love.graphics.newImageFont('assets/fonts/letters.png', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789.!?')
-	local pointsFont = love.graphics.newImageFont('assets/fonts/points.png', '0123456789')
-	countFont = pointsFont
-	scoreFont = pointsFont
+	local lettersFont = love.graphics.newImageFont('assets/fonts/letters.png', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789.!?')
+	--local pointsFont = love.graphics.newImageFont('assets/fonts/points.png', '0123456789')
+	local defaultFont = lettersFont
+	countFont = defaultFont
+	scoreFont = defaultFont
 
 	startNewRound()
 end
@@ -94,20 +97,21 @@ function love.draw()
 	drawBackground()
 
 	drawHealthBar(fighter1.health, 20, 20)
-	drawHealthBar(fighter2.health, SCREEN_WIDTH - 276, 20) -- 256 + 20 margin
+	drawHealthBar(fighter2.health, SCREEN_WIDTH - (SCREEN_WIDTH / 2) + 10, 20) -- 256 + 20 margin
 
 	fighter1:draw()
 	fighter2:draw()
 
+	local scoreXOffset = 8
 	love.graphics.setFont(scoreFont)
 	love.graphics.setColor(COLORS.RED)
-	love.graphics.print(score[1] .. ' - ' .. score[2], (SCREEN_WIDTH / 2), 30)
+	love.graphics.print(score[1] .. ' ' .. score[2], (SCREEN_WIDTH / 2) - scoreXOffset - 2, 40)
 
 	if introCount > 0 then
 		love.graphics.setFont(countFont)
-		love.graphics.print(introCount, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 3)
+		love.graphics.print(introCount, (SCREEN_WIDTH / 2)-4, SCREEN_HEIGHT / 3)
 	elseif roundOver then
-		love.graphics.draw(victoryImage, SCREEN_WIDTH / 2 - victoryImage:getWidth() / 2, SCREEN_HEIGHT / 3)
+		love.graphics.draw(victoryImage, (SCREEN_WIDTH / 2 - victoryImage:getWidth() / 2) - scoreXOffset, SCREEN_HEIGHT / 3)
 	end
 end
 
@@ -116,8 +120,8 @@ function drawBackground()
 end
 
 function drawHealthBar(health, x, y)
-	local barWidth = 256
-	local barHeight = 19
+	local barWidth = 256 / 2
+	local barHeight = 19 / 2
 	local ratio = math.max(health / 100, 0)
 
 	love.graphics.setColor(COLORS.WHITE)

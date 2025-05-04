@@ -65,8 +65,8 @@ function Fighter.load_animations(self)
 end
 
 function Fighter:move(screen_width, screen_height, target, round_over)
-	local SPEED = 700
-	local GRAVITY = 2000
+	local SPEED = 300
+	local GRAVITY = 3000
 	local dx, dy = 0, 0
 
 	self.running = false
@@ -103,10 +103,12 @@ function Fighter:move(screen_width, screen_height, target, round_over)
 		dx = (screen_width - self.rect.x - self.rect.w) / love.timer.getDelta()
 	end
 
-	if self.rect.y + self.rect.h + dy > screen_height - 110 then
+	ground_y = -35
+
+	if self.rect.y + self.rect.h + dy > screen_height - ground_y then
 		self.vel_y = 0
 		self.jump = false
-		dy = (screen_height - 110 - self.rect.y - self.rect.h)
+		dy = (screen_height - ground_y - self.rect.y - self.rect.h)
 	end
 
 	if target.rect.x > self.rect.x then
@@ -170,11 +172,18 @@ function Fighter:attack(target)
 		self.attacking = true
 		self.attack_sound:play()
 		local attack_range = {
-			x = self.rect.x - (2 * self.rect.w * (self.flip and 1 or -1)),
+--			x = self.rect.x - (2 * self.rect.w * (self.flip and 1 or -1)),
+			x = self.rect.x,
 			y = self.rect.y,
-			w = 2 * self.rect.w,
+--			w = 2 * self.rect.w,
+			w = self.rect.w,
 			h = self.rect.h,
 		}
+
+		if DEBUG then
+			print('attack_range', attack_range.x, attack_range.y, attack_range.w, attack_range.h)
+		end
+
 		if self:check_collision(attack_range, target.rect) then
 			target.health = target.health - 10
 			target.hit = true
@@ -191,18 +200,45 @@ end
 
 function Fighter:draw()
 	local quad = self.animations[self.action][self.frame_index]
-	local x = (self.rect.x - self.offset[1] * self.scale)
-	local y = (self.rect.y - self.offset[2] * self.scale)
+	-- local x = (self.rect.x - self.offset[1] * self.scale)
+	-- local y = (self.rect.y - self.offset[2] * self.scale)
+	-- local sx = self.scale * (self.flip and -1 or 1)
+	-- local sy = self.scale
+	-- local ox = self.flip and self.size or 0
+	-- local oy = 0
+	-- print('quad', quad, 'x', x, 'y', y, 'sx', sx, 'sy', sy, 'ox', ox, 'oy', oy)
+	-- love.graphics.draw(self.sprite_sheet, quad, x, y, r, sx, sy, ox, oy)
+
+	local qx, qy, qw, qh = quad:getViewport()
+
+	local x = (self.rect.x - self.offset[1])
+	local y = (self.rect.y - self.offset[2])
 	local r = 0
-	local sx = self.scale * (self.flip and -1 or 1)
-	local sy = self.scale
-	local ox = self.flip and self.size or 0
-	local oy = 0
-	print('quad', quad, 'x', x, 'y', y, 'sx', sx, 'sy', sy, 'ox', ox, 'oy', oy)
+	local sx = (self.flip and -1 or 1)
+	local sy = 1
+	local ox = qw / 2
+	local oy = qh / 2
 
-	love.graphics.rectangle('fill', 0, 0, 100, 00)
+	if DEBUG then
+		w = self.size / self.scale
+		h = self.size / self.scale
+		w2 = w / 2
+		h2 = h / 2
+		love.graphics.rectangle('line', x - w2, y - h2, w, h)
+	end
 
-	love.graphics.draw(self.sprite_sheet, quad, x, y, r, sx, sy, ox, oy)
+	-- TODO: This should behave the same as in LÖVE2D
+	if isLutro() then
+		xx = 80
+		yy = 80
+		if self.player == 2 then
+			xx = 120
+			yy = 126
+		end
+		love.graphics.draw(self.sprite_sheet, quad, x - xx, y - yy, r, sx, sy)
+	else
+		love.graphics.draw(self.sprite_sheet, quad, x, y, r, sx, sy, ox, oy)
+	end
 end
 
 function Fighter:check_collision(a, b)
