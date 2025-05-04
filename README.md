@@ -8,8 +8,6 @@ A **Street Fighter**-style 2D fighting game built with **Lua**, compatible with 
 
 > Featuring pixel art from [Fantasy Warrior](https://luizmelo.itch.io/fantasy-warrior) and [Evil Wizard 2](https://luizmelo.itch.io/evil-wizard-2) by [LuizMelo](https://luizmelo.itch.io).
 
----
-
 ## 🎮 Controls
 
 ### Player 1 (Keyboard)
@@ -41,7 +39,6 @@ When a gamepad is connected, it overrides keyboard controls.
 
 > Supports standard controllers via Love2D's [Gamepad API](https://love2d.org/wiki/Joystick:isGamepad) and Lutro's [Joystick](https://lutro.libretro.com/doc/love.joystick.html).
 
----
 
 ## 🚀 Running the Game
 
@@ -63,7 +60,6 @@ make run/lutro
 make get/lutro-core
 ```
 
----
 
 ## 📋 Features
 
@@ -78,7 +74,6 @@ make get/lutro-core
 * [ ] Flip player sprite based on direction
 * [ ] Add basic AI movement
 
----
 
 ## 📚 References
 
