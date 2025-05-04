@@ -24,7 +24,7 @@ run/love:
 	$(LOVE) .
 
 run/lutro:
-	$(FRONTEND) -v -L $(LUTRO_CORE) .
+	$(FRONTEND) --appendconfig=retroarch.cfg -v -L $(LUTRO_CORE) .
 
 run/lutro-debug:
 	gdb --args $(FRONTEND) -v -L $(LUTRO_CORE) .
