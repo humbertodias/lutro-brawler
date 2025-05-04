@@ -32,6 +32,9 @@ run/lutro-debug:
 lutro:
 	zip -9 -r brawler.lutro ./assets ./*.lua
 
+love:
+	zip -9 -r brawler.love ./assets ./*.lua
+
 js:
 	echo "EMSDK:$(EMSDK)"
 	source ${EMSDK}/emsdk_env.sh
