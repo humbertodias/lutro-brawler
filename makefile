@@ -42,7 +42,8 @@ js:
 	python3 ${EMSDK}/upstream/emscripten/tools/file_packager.py brawler.data --preload ./lutro --js-output=brawler.js	
 
 clean:
-	rm -f brawler.lutro
+	rm -rf *.lutro *.love
+	sudo rm -rf example
 
 format:
 	stylua *.lua
@@ -51,3 +52,10 @@ get/lutro-core:
 	wget -O lutro_libretro.zip $(LUTRO_URL)
 	unzip -o lutro_libretro.zip
 	rm lutro_libretro.zip
+
+wasm/build:	lutro
+	docker build . -t wasm
+	docker run -it -v $(PWD):/outside wasm sh -c 'cp -r /workdir/lotr/example /outside'
+
+wasm/serve:
+	python -m http.server 8000 --directory ./example

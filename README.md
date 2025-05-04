@@ -63,11 +63,18 @@ make get/lutro-core
 
 ---
 
-## 📋 TODO
+## 📋 Features
 
+* [X] Shared game code between love2d/lutro
+* [X] Keyboard/Joystick support
+* [X] Love2d build
+* [X] Lutro build
+* [X] WebAssembly (WASM) export
+* [X] Default resolution 320x240
+* [X] Use font spritesheed instead of ttf
+* [X] Use ogg instead mp3
 * [ ] Flip player sprite based on direction
 * [ ] Add basic AI movement
-* [ ] WebAssembly (WASM) export
 
 ---
 

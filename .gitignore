@@ -44,5 +44,6 @@ luac.out
 *.love
 *.zip
 
+example
 *.data
 *.js
