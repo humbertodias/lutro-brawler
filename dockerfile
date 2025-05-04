@@ -1,13 +1,13 @@
 FROM emscripten/emsdk:2.0.34
 
-# Build Arguments
-ARG GAME_NAME=brawler
-ARG GAME_ROM=brawler.lutro
-
 WORKDIR /workdir
 # Clone lotr and compile lutro core using emscripten
 RUN git clone --recursive https://github.com/kivutar/lotr.git && \
     cd lotr && make lutro
+
+# Build Arguments
+ARG GAME_NAME=brawler
+ARG GAME_ROM=brawler.lutro
 
 # Copy rom
 WORKDIR /workdir/lotr

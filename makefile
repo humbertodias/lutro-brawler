@@ -4,6 +4,8 @@ LOVE        := $(shell which love)
 UNAME_S     := $(shell uname -s)
 ARCH        := $(shell uname -m)
 PWD         := $(shell pwd)
+# Git versioning
+TAG_NAME    := $(shell git describe --tags --exact-match 2>/dev/null || git rev-parse --short HEAD)
 
 # Lutro core defaults
 LUTRO_CORE  := $(PWD)/lutro_libretro.so
@@ -30,10 +32,10 @@ run/lutro-debug:
 	gdb --args $(FRONTEND) -v -L $(LUTRO_CORE) .
 
 lutro:
-	zip -9 -r brawler.lutro ./assets ./*.lua
+	zip -9 -r brawler-$(TAG_NAME).lutro ./assets ./*.lua
 
 love:
-	zip -9 -r brawler.love ./assets ./*.lua
+	zip -9 -r brawler-$(TAG_NAME).love ./assets ./*.lua
 
 js:
 	echo "EMSDK:$(EMSDK)"
@@ -54,8 +56,11 @@ get/lutro-core:
 	rm lutro_libretro.zip
 
 wasm/build:	lutro
-	docker build . -t wasm
+	docker build . --build-arg GAME_ROM=brawler-$(TAG_NAME).lutro -t wasm
 	docker run -it -v $(PWD):/outside wasm sh -c 'cp -r /workdir/lotr/example /outside'
+
+wasm:	wasm/build
+	(cd example && zip -9 -r ../brawler-$(TAG_NAME).zip vendors/ brawler.* lutro_libretro.* index.html)
 
 wasm/serve:
 	python -m http.server 8000 --directory ./example
