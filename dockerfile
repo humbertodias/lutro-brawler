@@ -2,7 +2,7 @@ FROM emscripten/emsdk:2.0.34
 
 WORKDIR /workdir
 # Clone lotr and compile lutro core using emscripten
-RUN git clone --recursive https://github.com/kivutar/lotr.git && \
+RUN git clone --recursive https://github.com/humbertodias/lotr.git && \
     cd lotr && make lutro
 
 # Build Arguments
