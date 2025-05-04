@@ -54,6 +54,12 @@ If needed, download the **lutro** core:
 make get/lutro-core
 ```
 
+### TODO
+- [ ] Player flip
+- [ ] AI movement
+- [ ] Wasm build
+
+
 ## References
 
 - [ZeroBrane debugging with Love2D](https://notebook.kulchenko.com/zerobrane/love2d-debugging)
