@@ -22,6 +22,10 @@ local wizardSheet
 local victoryImage
 local swordSound
 local magicSound
+local victorySound
+local readySound
+local fightSound
+
 local countFont
 local scoreFont
 
@@ -60,6 +64,10 @@ function love.load()
 
 	swordSound = love.audio.newSource('assets/audio/sword.wav', 'static')
 	magicSound = love.audio.newSource('assets/audio/magic.wav', 'static')
+	
+	readySound = love.audio.newSource('assets/audio/ready.ogg', 'static')
+	fightSound = love.audio.newSource('assets/audio/fight.ogg', 'static')
+	victorySound = love.audio.newSource('assets/audio/victory.ogg', 'static')
 
 	local music = love.audio.newSource('assets/audio/music.ogg', 'stream')
 	music:setVolume(0.5)
@@ -77,6 +85,8 @@ end
 
 function love.update(dt)
 	if introCount <= 0 then
+		roundStart()
+
 		fighter1:move(SCREEN_WIDTH, SCREEN_HEIGHT, fighter2)
 		fighter2:move(SCREEN_WIDTH, SCREEN_HEIGHT, fighter1)
 
@@ -91,6 +101,14 @@ function love.update(dt)
 
 	checkRoundOver()
 end
+
+function roundStart()
+	if introCount == 0 and lastCountUpdate ~= -1 then
+		fightSound:play()
+		lastCountUpdate = -1 -- Prevents negative count from calling fight Sound repeatedly
+	end
+end
+
 
 function love.draw()
 	love.graphics.setColor(COLORS.WHITE)
@@ -112,6 +130,7 @@ function love.draw()
 		love.graphics.print(introCount, (SCREEN_WIDTH / 2) - 4, SCREEN_HEIGHT / 3)
 	elseif roundOver then
 		love.graphics.draw(victoryImage, (SCREEN_WIDTH / 2 - victoryImage:getWidth() / 2) - scoreXOffset, SCREEN_HEIGHT / 3)
+		victorySound:play()
 	end
 end
 
@@ -137,6 +156,7 @@ function drawHealthBar(health, x, y)
 end
 
 function startNewRound()
+	readySound:play()
 	fighter1 = Fighter.new(1, fighter1StartPos.x, fighter1StartPos.y, false, WARRIOR_DATA, warriorSheet, swordSound)
 	fighter2 = Fighter.new(2, fighter2StartPos.x, fighter2StartPos.y, true, WIZARD_DATA, wizardSheet, magicSound)
 end
