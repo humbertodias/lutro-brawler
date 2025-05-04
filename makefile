@@ -57,7 +57,7 @@ get/lutro-core:
 
 wasm/build:	lutro
 	docker build . --build-arg GAME_ROM=brawler-$(TAG_NAME).lutro -t wasm
-	docker run -it -v $(PWD):/outside wasm sh -c 'cp -r /workdir/lotr/example /outside'
+	docker run -i -v $(PWD):/outside wasm sh -c 'cp -r /workdir/lotr/example /outside'
 
 wasm:	wasm/build
 	(cd example && zip -9 -r ../brawler-$(TAG_NAME).zip vendors/ brawler.* lutro_libretro.* index.html)
