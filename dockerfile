@@ -2,8 +2,11 @@ FROM emscripten/emsdk:2.0.34
 
 WORKDIR /workdir
 # Clone lotr and compile lutro core using emscripten
-RUN git clone --recursive https://github.com/humbertodias/lotr.git && \
-    cd lotr && make lutro
+RUN git clone https://github.com/humbertodias/lotr.git && \
+    cd lotr && \
+    git submodule update --init cores/frontend && \
+    git submodule update --init cores/lutro && \
+    make lutro
 
 # Build Arguments
 ARG GAME_NAME=brawler
