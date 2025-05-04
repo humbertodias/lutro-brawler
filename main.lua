@@ -64,7 +64,7 @@ function love.load()
 
 	swordSound = love.audio.newSource('assets/audio/sword.wav', 'static')
 	magicSound = love.audio.newSource('assets/audio/magic.wav', 'static')
-	
+
 	readySound = love.audio.newSource('assets/audio/ready.ogg', 'static')
 	fightSound = love.audio.newSource('assets/audio/fight.ogg', 'static')
 	victorySound = love.audio.newSource('assets/audio/victory.ogg', 'static')
@@ -84,6 +84,7 @@ function love.load()
 end
 
 function love.update(dt)
+	Input.update(dt)
 	if introCount <= 0 then
 		roundStart()
 
@@ -108,7 +109,6 @@ function roundStart()
 		lastCountUpdate = -1 -- Prevents negative count from calling fight Sound repeatedly
 	end
 end
-
 
 function love.draw()
 	love.graphics.setColor(COLORS.WHITE)

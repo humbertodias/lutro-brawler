@@ -228,8 +228,8 @@ function Fighter:draw()
 	local oy = qh / 2
 
 	if DEBUG then
-		w = (self.size / self.scale)+4
-		h = (self.size / self.scale)+4
+		w = (self.size / self.scale) + 4
+		h = (self.size / self.scale) + 4
 		w2 = (w / 2)
 		h2 = (h / 2)
 		love.graphics.rectangle('line', x - w2, y - h2, w, h)
