@@ -17,6 +17,9 @@ local AttackType = {
 	ATTACK2 = 2,
 }
 
+PLAYER_SPEED = 300
+PLAYER_GRAVITY = 3000
+
 function Fighter.new(player, x, y, flip, data, sprite_sheet, attack_sound)
 	local self = setmetatable({}, Fighter)
 
@@ -65,18 +68,17 @@ function Fighter.load_animations(self)
 end
 
 function Fighter:move(screen_width, screen_height, target, round_over)
-	local SPEED = 300
-	local GRAVITY = 3000
+	local dt = love.timer.getDelta()
 	local dx, dy = 0, 0
 
 	self.running = false
 	self.attack_type = AttackType.NONE
 
-	-- Only allow movement and actions if not attacking and round is not over
-	if not self.attacking and self.alive and not round_over then
+	-- Process movement and actions if fighter is active
+	if self.alive and not self.attacking and not round_over then
 		local move_dir = Input.getMovement(self.player)
 		if move_dir ~= 0 then
-			dx = SPEED * move_dir
+			dx = PLAYER_SPEED * move_dir
 			self.running = true
 		end
 
@@ -92,51 +94,50 @@ function Fighter:move(screen_width, screen_height, target, round_over)
 		end
 	end
 
-	-- Gravity
-	self.vel_y = self.vel_y + GRAVITY * love.timer.getDelta()
-	dy = self.vel_y * love.timer.getDelta()
+	-- Apply gravity
+	self.vel_y = self.vel_y + PLAYER_GRAVITY * dt
+	dy = self.vel_y * dt
 
-	-- Wall bounds
-	if self.rect.x + dx * love.timer.getDelta() < 0 then
-		dx = -self.rect.x / love.timer.getDelta()
-	elseif self.rect.x + self.rect.w + dx * love.timer.getDelta() > screen_width then
-		dx = (screen_width - self.rect.x - self.rect.w) / love.timer.getDelta()
+	-- Horizontal bounds check
+	local future_x = self.rect.x + dx * dt
+	if future_x < 0 then
+		dx = -self.rect.x / dt
+	elseif future_x + self.rect.w > screen_width then
+		dx = (screen_width - self.rect.x - self.rect.w) / dt
 	end
 
-	ground_y = -35
-
-	if self.rect.y + self.rect.h + dy > screen_height - ground_y then
+	-- Vertical ground collision
+	local ground_y = -35
+	local future_y = self.rect.y + self.rect.h + dy
+	if future_y > screen_height - ground_y then
 		self.vel_y = 0
 		self.jump = false
-		dy = (screen_height - ground_y - self.rect.y - self.rect.h)
+		dy = screen_height - ground_y - self.rect.y - self.rect.h
 	end
 
-	if target.rect.x > self.rect.x then
-		self.flip = false
-	else
-		self.flip = true
-	end
+	-- Flip sprite based on target position
+	self.flip = target.rect.x <= self.rect.x
 
+	-- Decrease attack cooldown if active
 	if self.attack_cooldown > 0 then
 		self.attack_cooldown = self.attack_cooldown - 1
 	end
 
-	self.rect.x = self.rect.x + dx * love.timer.getDelta()
+	-- Apply movement
+	self.rect.x = self.rect.x + dx * dt
 	self.rect.y = self.rect.y + dy
 end
 
 function Fighter:update()
+	-- Update action based on state
 	if self.health <= 0 then
 		self.alive = false
 		self:update_action(Actions.DEATH)
 	elseif self.hit then
 		self:update_action(Actions.HIT)
 	elseif self.attacking then
-		if self.attack_type == AttackType.ATTACK1 then
-			self:update_action(Actions.ATTACK1)
-		elseif self.attack_type == AttackType.ATTACK2 then
-			self:update_action(Actions.ATTACK2)
-		end
+		local attack_action = (self.attack_type == AttackType.ATTACK1) and Actions.ATTACK1 or Actions.ATTACK2
+		self:update_action(attack_action)
 	elseif self.jump then
 		self:update_action(Actions.JUMP)
 	elseif self.running then
@@ -145,24 +146,31 @@ function Fighter:update()
 		self:update_action(Actions.IDLE)
 	end
 
+	-- Advance animation frame
 	self.frame_timer = self.frame_timer + love.timer.getDelta()
-	if self.frame_timer > 0.05 then
-		self.frame_timer = 0
-		self.frame_index = self.frame_index + 1
-		if self.frame_index > #self.animations[self.action] then
-			if not self.alive then
-				self.frame_index = #self.animations[self.action]
-			else
-				self.frame_index = 1
-				if self.action == Actions.ATTACK1 or self.action == Actions.ATTACK2 then
-					self.attacking = false
-					self.attack_cooldown = 20
-				elseif self.action == Actions.HIT then
-					self.hit = false
-					self.attacking = false
-					self.attack_cooldown = 20
-				end
-			end
+	if self.frame_timer <= 0.05 then
+		return
+	end
+	self.frame_timer = 0
+	self.frame_index = self.frame_index + 1
+
+	local current_animation = self.animations[self.action]
+	if self.frame_index > #current_animation then
+		if not self.alive then
+			self.frame_index = #current_animation -- Freeze on last death frame
+			return
+		end
+
+		self.frame_index = 1
+
+		-- Reset states after animation completes
+		if self.action == Actions.ATTACK1 or self.action == Actions.ATTACK2 then
+			self.attacking = false
+			self.attack_cooldown = 20
+		elseif self.action == Actions.HIT then
+			self.hit = false
+			self.attacking = false
+			self.attack_cooldown = 20
 		end
 	end
 end
@@ -220,10 +228,10 @@ function Fighter:draw()
 	local oy = qh / 2
 
 	if DEBUG then
-		w = self.size / self.scale
-		h = self.size / self.scale
-		w2 = w / 2
-		h2 = h / 2
+		w = (self.size / self.scale)+4
+		h = (self.size / self.scale)+4
+		w2 = (w / 2)
+		h2 = (h / 2)
 		love.graphics.rectangle('line', x - w2, y - h2, w, h)
 	end
 

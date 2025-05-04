@@ -55,7 +55,7 @@ local function joyIsDown(player, buttonId)
 		local mapped = GAMEPAD_MAP[buttonId]
 		return mapped and j:isGamepadDown(mapped)
 	end
-
+	-- TODO: move to better place
 	if isLutro() then
 		return love.joystick.isDown(player, buttonId)
 	end
