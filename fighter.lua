@@ -172,10 +172,10 @@ function Fighter:attack(target)
 		self.attacking = true
 		self.attack_sound:play()
 		local attack_range = {
---			x = self.rect.x - (2 * self.rect.w * (self.flip and 1 or -1)),
+			--			x = self.rect.x - (2 * self.rect.w * (self.flip and 1 or -1)),
 			x = self.rect.x,
 			y = self.rect.y,
---			w = 2 * self.rect.w,
+			--			w = 2 * self.rect.w,
 			w = self.rect.w,
 			h = self.rect.h,
 		}

@@ -109,7 +109,7 @@ function love.draw()
 
 	if introCount > 0 then
 		love.graphics.setFont(countFont)
-		love.graphics.print(introCount, (SCREEN_WIDTH / 2)-4, SCREEN_HEIGHT / 3)
+		love.graphics.print(introCount, (SCREEN_WIDTH / 2) - 4, SCREEN_HEIGHT / 3)
 	elseif roundOver then
 		love.graphics.draw(victoryImage, (SCREEN_WIDTH / 2 - victoryImage:getWidth() / 2) - scoreXOffset, SCREEN_HEIGHT / 3)
 	end
