@@ -4,6 +4,8 @@
 
 A **Street Fighter**-style 2D fighting game built with **Lua**, compatible with both [Love2D](https://love2d.org) and [Lutro](http://lutro.libretro.com).
 
+[Play online](https://humbertodias.github.io/lutro-brawler/) or [Download the latest release](https://github.com/humbertodias/lutro-brawler/releases).
+
 ![Gameplay Screenshot](https://github.com/user-attachments/assets/d5fee812-c1bf-459a-9e25-034702be62af)
 
 > Featuring pixel art from [Fantasy Warrior](https://luizmelo.itch.io/fantasy-warrior) and [Evil Wizard 2](https://luizmelo.itch.io/evil-wizard-2) by [LuizMelo](https://luizmelo.itch.io).
