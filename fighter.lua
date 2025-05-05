@@ -79,6 +79,11 @@ function Fighter:move(screen_width, screen_height, target, round_over)
 	local JOY_UP = Input.isDown(self.player, BTN_UP)
 	local DO_ATTACK1 = Input.once(self.player, BTN_B)
 	local DO_ATTACK2 = Input.once(self.player, BTN_Y)
+	local DO_SELECT = Input.once(self.player, BTN_SELECT)
+
+	if DO_SELECT then
+		DEBUG = not DEBUG
+	end
 
 	-- Process movement and actions if fighter is active
 	if self.alive and not self.attacking and not round_over then
