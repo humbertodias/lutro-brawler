@@ -74,20 +74,26 @@ function Fighter:move(screen_width, screen_height, target, round_over)
 	self.running = false
 	self.attack_type = AttackType.NONE
 
+	local JOY_LEFT = Input.isDown(self.player, BTN_LEFT)
+	local JOY_RIGHT = Input.isDown(self.player, BTN_RIGHT)
+	local JOY_UP = Input.isDown(self.player, BTN_UP)
+	local DO_ATTACK1 = Input.once(self.player, BTN_B)
+	local DO_ATTACK2 = Input.once(self.player, BTN_Y)
+
 	-- Process movement and actions if fighter is active
 	if self.alive and not self.attacking and not round_over then
-		local move_dir = Input.getMovement(self.player)
+		local move_dir = JOY_LEFT and -1 or JOY_RIGHT and 1 or 0
 		if move_dir ~= 0 then
 			dx = PLAYER_SPEED * move_dir
 			self.running = true
 		end
 
-		if Input.isJumpPressed(self.player) and not self.jump then
+		if JOY_UP and not self.jump then
 			self.vel_y = -900
 			self.jump = true
 		end
 
-		local attack = Input.getAttackType(self.player)
+		local attack = DO_ATTACK1 and 1 or DO_ATTACK2 and 2 or 0
 		if attack ~= AttackType.NONE then
 			self:attack(target)
 			self.attack_type = attack

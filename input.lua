@@ -160,22 +160,4 @@ return {
 	setDaft = function(val)
 		daft = val
 	end,
-
-	getMovement = function(pad)
-		-- -1,1,0
-        if love.joystick.isDown(pad, BTN_LEFT) then return -1
-        elseif love.joystick.isDown(pad, BTN_RIGHT) then return 1 end
-        return 0
-	end,
-	getAttackType = function(pad)
-		-- 1,2,0
-        if love.joystick.isDown(pad, BTN_B) then return 1
-        elseif love.joystick.isDown(pad, BTN_Y) then return 2 end
-        return 0
-	end,
-
-	isJumpPressed = function(pad)
-		-- true/false
-		return love.joystick.isDown(pad, BTN_UP)
-	end,
 }
