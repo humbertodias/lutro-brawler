@@ -253,9 +253,8 @@ function Fighter:draw()
 		love.graphics.rectangle('line', x - w2, y - h2, w, h)
 
 		if self.attack_box then
-			love.graphics.rectangle("line", self.attack_box.x, self.attack_box.y, self.attack_box.w, self.attack_box.h)
+			love.graphics.rectangle('line', self.attack_box.x, self.attack_box.y, self.attack_box.w, self.attack_box.h)
 		end
-
 	end
 
 	-- TODO: This should behave the same as in LÖVE2D

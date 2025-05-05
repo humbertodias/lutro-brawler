@@ -25,6 +25,7 @@ local magicSound
 local victorySound
 local readySound
 local fightSound
+local musicBG
 
 local countFont
 local scoreFont
@@ -69,10 +70,10 @@ function love.load()
 	fightSound = love.audio.newSource('assets/audio/fight.ogg', 'static')
 	victorySound = love.audio.newSource('assets/audio/victory.ogg', 'static')
 
-	local music = love.audio.newSource('assets/audio/music.ogg', 'stream')
-	music:setVolume(0.5)
-	music:setLooping(true)
-	music:play()
+	musicBG = love.audio.newSource('assets/audio/music.ogg', 'stream')
+	musicBG:setVolume(0.5)
+	musicBG:setLooping(true)
+	musicBG:play()
 
 	local lettersFont = love.graphics.newImageFont('assets/fonts/letters.png', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789.!?')
 	--local pointsFont = love.graphics.newImageFont('assets/fonts/points.png', '0123456789')
@@ -85,6 +86,12 @@ end
 
 function love.update(dt)
 	Input.update(dt)
+
+	checkPause()
+	if PAUSE then
+		return
+	end
+
 	if introCount <= 0 then
 		roundStart()
 
@@ -101,6 +108,17 @@ function love.update(dt)
 	end
 
 	checkRoundOver()
+end
+
+function checkPause()
+	if Input.once(1, BTN_START) or Input.once(2, BTN_START) then
+		PAUSE = not PAUSE
+		if PAUSE then
+			musicBG:stop()
+		else
+			musicBG:play()
+		end
+	end
 end
 
 function roundStart()
@@ -132,14 +150,22 @@ function love.draw()
 		love.graphics.draw(victoryImage, (SCREEN_WIDTH / 2 - victoryImage:getWidth() / 2) - scoreXOffset, SCREEN_HEIGHT / 3)
 		victorySound:play()
 	end
+	love.graphics.setColor(COLORS.WHITE)
 
 	if DEBUG then
-		drawDebugInfo()
+		drawDebug()
+	end
+	if PAUSE then
+		drawPause()
 	end
 end
 
 function drawBackground()
 	love.graphics.draw(bgImage, 0, 0, 0, bgScaleX, bgScaleY)
+end
+
+function drawPause()
+	love.graphics.print('PAUSED', (SCREEN_WIDTH / 2) - 20, SCREEN_HEIGHT / 2)
 end
 
 function drawHealthBar(health, x, y)
@@ -159,10 +185,10 @@ function drawHealthBar(health, x, y)
 	love.graphics.setColor(COLORS.WHITE)
 end
 
-function drawDebugInfo()
-    love.graphics.setColor(COLORS.WHITE)
-    love.graphics.setFont(scoreFont)
-	love.graphics.print(string.format("VERSION: %s", VERSION:upper()), 10, SCREEN_HEIGHT - 10)
+function drawDebug()
+	love.graphics.setColor(COLORS.WHITE)
+	love.graphics.setFont(scoreFont)
+	love.graphics.print(string.format('VERSION: %s', VERSION:upper()), 10, SCREEN_HEIGHT - 10)
 end
 
 function startNewRound()

@@ -8,7 +8,8 @@ COLORS = {
 }
 
 DEBUG = false
-VERSION = 'ba8062e'
+VERSION = '4e4feaf'
+PAUSE = false
 
 function isLutro()
 	local major, minor, revision, codename = love.getVersion()
