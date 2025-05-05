@@ -7,7 +7,7 @@ COLORS = {
 	WHITE = { 255, 255, 255 },
 }
 
-DEBUG = true
+DEBUG = false
 VERSION = 'ba8062e'
 
 function isLutro()
