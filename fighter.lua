@@ -48,6 +48,7 @@ function Fighter.new(player, x, y, flip, data, sprite_sheet, attack_sound)
 	self.hit = false
 	self.health = 100
 	self.alive = true
+	self.attack_box = nil
 
 	return self
 end
@@ -185,10 +186,12 @@ function Fighter:update()
 		if self.action == Actions.ATTACK1 or self.action == Actions.ATTACK2 then
 			self.attacking = false
 			self.attack_cooldown = 20
+			self.attack_box = nil
 		elseif self.action == Actions.HIT then
 			self.hit = false
 			self.attacking = false
 			self.attack_cooldown = 20
+			self.attack_box = nil
 		end
 	end
 end
@@ -205,10 +208,7 @@ function Fighter:attack(target)
 			w = self.rect.w,
 			h = self.rect.h,
 		}
-
-		if DEBUG then
-			print('attack_range', attack_range.x, attack_range.y, attack_range.w, attack_range.h)
-		end
+		self.attack_box = attack_range
 
 		if self:check_collision(attack_range, target.rect) then
 			target.health = target.health - 10
@@ -251,6 +251,11 @@ function Fighter:draw()
 		w2 = (w / 2)
 		h2 = (h / 2)
 		love.graphics.rectangle('line', x - w2, y - h2, w, h)
+
+		if self.attack_box then
+			love.graphics.rectangle("line", self.attack_box.x, self.attack_box.y, self.attack_box.w, self.attack_box.h)
+		end
+
 	end
 
 	-- TODO: This should behave the same as in LÖVE2D
