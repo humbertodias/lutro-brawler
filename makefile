@@ -39,13 +39,8 @@ love:	version
 	zip -9 -r brawler-$(TAG_NAME).love ./assets ./*.lua
 
 version:
-	sed -i "s/^VERSION.*/VERSION = '${TAG_NAME}'/" global.lua
-
-js:
-	echo "EMSDK:$(EMSDK)"
-	source ${EMSDK}/emsdk_env.sh
-	emsdk install binaryen-main-64bit
-	python3 ${EMSDK}/upstream/emscripten/tools/file_packager.py brawler.data --preload ./lutro --js-output=brawler.js	
+	@echo "Version: $(TAG_NAME)"
+	sed -i.bak "s/^VERSION.*/VERSION = '${TAG_NAME}'/" global.lua && rm -f global.lua.bak
 
 clean:
 	rm -rf *.lutro *.love *.zip
@@ -66,5 +61,6 @@ wasm/build:	lutro
 wasm:	version	wasm/build
 	(cd example && zip -9 -r ../brawler-$(TAG_NAME).zip vendors/ brawler.* lutro_libretro.* main.js index.html)
 
-wasm/serve:
+run/wasm:
+	@echo "Serving example on http://localhost:8000"
 	python -m http.server 8000 --directory ./example
