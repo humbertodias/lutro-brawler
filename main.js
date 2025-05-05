@@ -98,7 +98,7 @@ function run(gamePath) {
 
 const btn = document.querySelector("button");
 btn.addEventListener("click", function () {
-  run("brawler-4edcdf9.lutro");
+  run("brawler-fa4de2c.lutro");
   document.querySelector("#loading").style.display = "block";
   btn.style.display = "none";
 });
