@@ -48,7 +48,7 @@ js:
 	python3 ${EMSDK}/upstream/emscripten/tools/file_packager.py brawler.data --preload ./lutro --js-output=brawler.js	
 
 clean:
-	rm -rf *.lutro *.love
+	rm -rf *.lutro *.love *.zip
 	sudo rm -rf example
 
 format:
