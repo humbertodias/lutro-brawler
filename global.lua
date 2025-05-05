@@ -13,8 +13,3 @@ function isLutro()
 	local major, minor, revision, codename = love.getVersion()
 	return codename == 'Lutro'
 end
-
-function isLove()
-	local major, minor, revision, codename = love.getVersion()
-	return codename ~= 'Lutro' and major > 0
-end
