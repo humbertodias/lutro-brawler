@@ -32,11 +32,14 @@ run/lutro:
 run/lutro-debug:
 	gdb --args $(FRONTEND) -v -L $(LUTRO_CORE) .
 
-lutro:
+lutro:	version
 	zip -9 -r brawler-$(TAG_NAME).lutro ./assets ./*.lua
 
-love:
+love:	version
 	zip -9 -r brawler-$(TAG_NAME).love ./assets ./*.lua
+
+version:
+	sed -i "s/^VERSION.*/VERSION = '${TAG_NAME}'/" global.lua
 
 js:
 	echo "EMSDK:$(EMSDK)"
@@ -60,7 +63,7 @@ wasm/build:	lutro
 	$(DOCKER) build . --build-arg GAME_ROM=brawler-$(TAG_NAME).lutro -t wasm
 	$(DOCKER) run -i -v $(PWD):/outside wasm sh -c 'cp -r /workdir/lotr/example /outside'
 
-wasm:	wasm/build
+wasm:	version	wasm/build
 	(cd example && zip -9 -r ../brawler-$(TAG_NAME).zip vendors/ brawler.* lutro_libretro.* main.js index.html)
 
 wasm/serve:

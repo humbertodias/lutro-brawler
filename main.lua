@@ -132,6 +132,10 @@ function love.draw()
 		love.graphics.draw(victoryImage, (SCREEN_WIDTH / 2 - victoryImage:getWidth() / 2) - scoreXOffset, SCREEN_HEIGHT / 3)
 		victorySound:play()
 	end
+
+	if DEBUG then
+		drawDebugInfo()
+	end
 end
 
 function drawBackground()
@@ -153,6 +157,12 @@ function drawHealthBar(health, x, y)
 	love.graphics.rectangle('fill', x, y, barWidth * ratio, barHeight)
 
 	love.graphics.setColor(COLORS.WHITE)
+end
+
+function drawDebugInfo()
+    love.graphics.setColor(COLORS.WHITE)
+    love.graphics.setFont(scoreFont)
+	love.graphics.print(string.format("VERSION: %s", VERSION:upper()), 10, SCREEN_HEIGHT - 10)
 end
 
 function startNewRound()
