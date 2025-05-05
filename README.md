@@ -20,7 +20,7 @@ A **Street Fighter**-style 2D fighting game built with **Lua**, compatible with 
 | Attack 1 | A                 |
 | Attack 2 | S/Z               |
 
-### Player 2 (Joystick)
+### Player 1/2 (Joystick)
 
 | Action   | Key(s)     |
 | -------- | ---------- |
@@ -28,6 +28,7 @@ A **Street Fighter**-style 2D fighting game built with **Lua**, compatible with 
 | Attack 1 | B          |
 | Attack 2 | Y          |
 | Select   | Debug      |
+| Startt   | Pause      |
 
 > Supports standard controllers via Love2D's [Gamepad API](https://love2d.org/wiki/Joystick:isGamepad) and Lutro's [Joystick](https://lutro.libretro.com/doc/love.joystick.html).
 
