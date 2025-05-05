@@ -61,7 +61,7 @@ make get/lutro-core
 * [X] WebAssembly (WASM) export
 * [X] Default resolution 320x240
 * [X] Use font spritesheed instead of ttf
-* [X] Use ogg instead mp3
+* [X] Use ogg instead of mp3
 * [ ] Flip player sprite based on direction
 * [ ] Add basic AI movement
 
