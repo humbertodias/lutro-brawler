@@ -12,30 +12,20 @@ A **Street Fighter**-style 2D fighting game built with **Lua**, compatible with 
 
 ### Player 1 (Keyboard)
 
-| Action   | Key(s)  |
-| -------- | ------- |
-| Move     | W A S D |
-| Attack 1 | R       |
-| Attack 2 | T       |
-
-### Player 2 (Keyboard)
-
 | Action   | Key(s)            |
 | -------- | ----------------- |
 | Move     | Arrow Keys (↑↓←→) |
-| Attack 1 | Numpad 1          |
-| Attack 2 | Numpad 2          |
+| Attack 1 | A                 |
+| Attack 2 | S/Z               |
 
-### Gamepad Support
+### Player 2 (Joystick)
 
-When a gamepad is connected, it overrides keyboard controls.
-
-| Gamepad Input | Mapped Action |
-| ------------- | ------------- |
-| A             | Jump          |
-| X             | Attack 1      |
-| Y             | Attack 2      |
-| D-Pad ←/→     | Move          |
+| Action   | Key(s)     |
+| -------- | ---------- |
+| Move     | D-Pad ←/→  |
+| Attack 1 | B          |
+| Attack 2 | Y          |
+| Select   | Debug      |
 
 > Supports standard controllers via Love2D's [Gamepad API](https://love2d.org/wiki/Joystick:isGamepad) and Lutro's [Joystick](https://lutro.libretro.com/doc/love.joystick.html).
 
@@ -59,7 +49,6 @@ make run/lutro
 ```sh
 make get/lutro-core
 ```
-
 
 ## 📋 Features
 
