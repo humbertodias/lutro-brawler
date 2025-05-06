@@ -179,7 +179,7 @@
     }
   
    }
-   loadPackage({"files": [{"filename": "/brawler-fa4de2c.lutro", "start": 0, "end": 3303780}], "remote_package_size": 3303780, "package_uuid": "f6abedd3-8608-48db-8b9a-421d5e28aa79"});
+   loadPackage({"files": [{"filename": "/brawler-v0.3.lutro", "start": 0, "end": 3303779}], "remote_package_size": 3303779, "package_uuid": "be883077-95ad-4346-8eb8-045722996b8f"});
   
   })();
   
