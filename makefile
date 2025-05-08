@@ -59,7 +59,7 @@ wasm/build:	lutro
 	$(DOCKER) run -i -v $(PWD):/outside wasm sh -c 'cp -r /workdir/lotr/example /outside'
 
 wasm:	version	wasm/build
-	(cd example && zip -9 -r ../brawler-$(TAG_NAME).zip vendors/ brawler.* lutro_libretro.* main.js index.html)
+	(cd example && zip -9 -r ../brawler-wasm-$(TAG_NAME).zip vendors/ brawler.* lutro_libretro.* main.js index.html)
 
 run/wasm:
 	@echo "Serving example on http://localhost:8000"
