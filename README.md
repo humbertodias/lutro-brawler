@@ -54,7 +54,7 @@ make run/lutro
 make get/lutro-core
 ```
 
-## 📋 Features
+## 📋 TODO
 
 * [X] Shared codebase between love2d/lutro
 * [X] Keyboard/Joystick support
@@ -66,6 +66,9 @@ make get/lutro-core
 * [X] Use ogg instead of mp3
 * [ ] Flip player sprite based on direction
 * [ ] Add basic AI movement
+* [ ] Make hitbox size configurable
+* [ ] Implement player selector scene
+* [ ] Implement player sequence of attacks + hud
 
 
 ## 📚 References
