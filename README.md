@@ -56,7 +56,7 @@ make get/lutro-core
 
 ## 📋 Features
 
-* [X] Shared game code between love2d/lutro
+* [X] Shared codebase between love2d/lutro
 * [X] Keyboard/Joystick support
 * [X] Love2d build
 * [X] Lutro build
