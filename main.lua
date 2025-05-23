@@ -48,10 +48,45 @@ local fighter2 -- Fighter object for player 2.
 --   scale: The scaling factor to apply when drawing the sprite.
 --   offset: {x, y} pixel offset for drawing the sprite relative to its collision box position, helps align visuals.
 --   steps: An array where each element is the number of frames for a specific animation (e.g., idle, run, attack).
-local WARRIOR_DATA = { size = 162, scale = 4, offset = { -40, -80 }, steps = { 10, 8, 1, 7, 7, 3, 7 } }
+--   hitbox_config: Defines hitboxes for specific actions and frames.
+--     Each key is an Action (e.g., Actions.ATTACK1).
+--     The value is an array of tables, each defining a hitbox for a specific frame:
+--       frame: The frame number (1-based) when this hitbox is active.
+--       x_offset, y_offset: Relative to fighter's self.rect.x/y.
+--       w, h: Width and height of the hitbox.
+local WARRIOR_DATA = {
+	size = 162,
+	scale = 4,
+	offset = { -40, -80 },
+	steps = { 10, 8, 1, 7, 7, 3, 7 },
+	hitbox_config = {
+		[Actions.ATTACK1] = {
+			{ frame = 3, x_offset = 50, y_offset = 70, w = 40, h = 30 },
+			{ frame = 4, x_offset = 52, y_offset = 70, w = 40, h = 30 },
+		},
+		[Actions.ATTACK2] = {
+			{ frame = 4, x_offset = 55, y_offset = 60, w = 65, h = 35 },
+		},
+	},
+}
 
 -- WIZARD_DATA: Contains specific parameters for the Wizard character (same structure as WARRIOR_DATA).
-local WIZARD_DATA = { size = 250, scale = 3, offset = { -40, -60 }, steps = { 8, 8, 1, 8, 8, 3, 7 } }
+local WIZARD_DATA = {
+	size = 250,
+	scale = 3,
+	offset = { -40, -60 },
+	steps = { 8, 8, 1, 8, 8, 3, 7 },
+	hitbox_config = {
+		[Actions.ATTACK1] = {
+			{ frame = 3, x_offset = 60, y_offset = 80, w = 35, h = 25 },
+			{ frame = 4, x_offset = 62, y_offset = 80, w = 35, h = 25 },
+		},
+		[Actions.ATTACK2] = {
+			{ frame = 4, x_offset = 70, y_offset = 70, w = 40, h = 40 },
+			{ frame = 5, x_offset = 70, y_offset = 70, w = 40, h = 40 },
+		},
+	},
+}
 
 -- Starting positions for the fighters.
 local fighter1StartPos = { x = 40, y = 95 } -- Initial {x, y} coordinates for fighter 1.

@@ -46,6 +46,11 @@ function Fighter.new(player, x, y, flip, data, sprite_sheet, attack_sound)
 	self.sprite_sheet = sprite_sheet -- The sprite sheet image.
 	self.attack_sound = attack_sound -- Sound played on attack.
 	self.flip = flip -- Initial sprite flip state.
+	self.hitbox_config = data.hitbox_config or {} -- Store hitbox configurations from data.
+	self.active_hitboxes = {} -- Stores currently active hitboxes for collision detection this frame.
+	self.current_target = nil -- Stores the target passed during an attack sequence.
+	self.invulnerable_timer = 0.0 -- Timer for current invulnerability duration.
+	self.invulnerability_duration = 0.5 -- Default duration of invulnerability in seconds.
 
 	-- Initialize animation-related properties.
 	self.animations = Fighter.load_animations(self) -- Load all animation frames from the sprite sheet.
@@ -66,6 +71,17 @@ function Fighter.new(player, x, y, flip, data, sprite_sheet, attack_sound)
 	self.health = 100 -- Current health points.
 	self.alive = true -- True if the fighter is alive.
 	self.attack_box = nil -- Collision box for attacks, created when an attack occurs.
+
+	-- Initialize hurtbox properties.
+	-- The hurtbox defines the area where the fighter can be hit.
+	self.hurtbox = {}
+	self.hurtbox.w = self.rect.w * 0.75 -- Hurtbox width, default 75% of rectangle width.
+	self.hurtbox.h = self.rect.h * 0.9 -- Hurtbox height, default 90% of rectangle height.
+	-- Horizontal offset from self.rect.x, centers the hurtbox within self.rect.
+	self.hurtbox.offset_x = (self.rect.w - self.hurtbox.w) / 2
+	-- Vertical offset from self.rect.y, positions the hurtbox towards the bottom of self.rect.
+	self.hurtbox.offset_y = self.rect.h - self.hurtbox.h
+	self.hurtbox.active = true -- Hurtbox is active by default.
 
 	return self
 end
@@ -183,6 +199,23 @@ local action_map = {
 
 -- Updates the fighter's state, current action, and animation frame.
 function Fighter:update()
+	-- Clear active hitboxes from the previous frame.
+	self.active_hitboxes = {}
+
+	local dt = love.timer.getDelta() -- Get delta time for timer updates.
+
+	-- Manage Invulnerability State
+	if self.invulnerable_timer > 0 then
+		self.invulnerable_timer = self.invulnerable_timer - dt
+		if self.invulnerable_timer <= 0 then
+			self.invulnerable_timer = 0
+			-- Re-activate hurtbox if alive and not currently in a hit animation (which has its own logic for re-activation).
+			if self.alive and self.action ~= Actions.HIT then
+				self.hurtbox.active = true
+			end
+		end
+	end
+
 	-- Update the fighter's action based on their current state.
 	if self.health <= 0 then
 		-- Fighter is defeated.
@@ -233,13 +266,72 @@ function Fighter:update()
 			-- Attack animation finished.
 			self.attacking = false
 			self.attack_cooldown = 20 -- Set cooldown before next attack.
-			self.attack_box = nil -- Clear the attack hitbox.
+			self.current_target = nil -- Clear target reference.
+			self.active_hitboxes = {} -- Clear any active hitboxes.
 		elseif self.action == Actions.HIT then
 			-- Hit stun animation finished.
 			self.hit = false
 			self.attacking = false -- Ensure attacking is false if hit interrupts an attack.
 			self.attack_cooldown = 20 -- Cooldown can also apply after being hit.
-			self.attack_box = nil
+			self.current_target = nil -- Clear target reference.
+			self.active_hitboxes = {} -- Clear any active hitboxes.
+			-- If invulnerability timer has already expired by the time hit animation finishes, re-activate hurtbox.
+			if self.invulnerable_timer <= 0 then
+				self.hurtbox.active = true
+			end
+		end
+	end
+
+	-- Hitbox Calculation:
+	-- If the fighter is attacking and the current action has defined hitboxes.
+	if self.attacking and self.hitbox_config[self.action] then
+		local action_hitbox_defs = self.hitbox_config[self.action]
+		for _, hitbox_def in ipairs(action_hitbox_defs) do
+			-- Check if the hitbox definition is for the current animation frame.
+			if hitbox_def.frame == self.frame_index then
+				local hx_offset = hitbox_def.x_offset
+				local hy_offset = hitbox_def.y_offset
+				local hw = hitbox_def.w
+				local hh = hitbox_def.h
+				-- Calculate actual hitbox position, accounting for fighter's direction (flip).
+				-- If self.flip is true, fighter is facing left. x_offset should be from the right edge.
+				local actual_x
+				if self.flip then
+					actual_x = self.rect.x + (self.rect.w - hx_offset - hw)
+				else
+					actual_x = self.rect.x + hx_offset
+				end
+				local actual_y = self.rect.y + hy_offset
+
+				table.insert(self.active_hitboxes, { x = actual_x, y = actual_y, w = hw, h = hh })
+			end
+		end
+	end
+
+	-- Collision Detection & Application:
+	-- If fighter is attacking, has a target, and there are active hitboxes this frame.
+	if self.attacking and self.current_target and #self.active_hitboxes > 0 then
+		-- Calculate target's actual hurtbox coordinates for this frame.
+		local target_hurtbox_rect = {
+			x = self.current_target.rect.x + self.current_target.hurtbox.offset_x,
+			y = self.current_target.rect.y + self.current_target.hurtbox.offset_y,
+			w = self.current_target.hurtbox.w,
+			h = self.current_target.hurtbox.h,
+		}
+
+		-- Check collision only if the target's hurtbox is active.
+		if self.current_target.hurtbox.active then
+			for _, hitbox_rect in ipairs(self.active_hitboxes) do
+				if self:check_collision(hitbox_rect, target_hurtbox_rect) then
+					self.current_target.health = self.current_target.health - 10 -- Apply damage.
+					self.current_target.hit = true -- Set target to hit state.
+					-- Trigger invulnerability on the target.
+					self.current_target.invulnerable_timer = self.current_target.invulnerability_duration
+					self.current_target.hurtbox.active = false
+					-- Optional: Add self.attack_has_landed = true here if needed.
+					break -- One successful hit is enough for this frame.
+				end
+			end
 		end
 	end
 end
@@ -251,25 +343,9 @@ function Fighter:attack(target)
 	if self.attack_cooldown <= 0 then
 		self.attacking = true -- Set fighter state to attacking.
 		self.attack_sound:play() -- Play attack sound.
-
-		-- Define the attack's hitbox (attack_range).
-		-- The commented-out lines suggest alternative hitbox calculations.
-		-- Current implementation: hitbox is same width as fighter, positioned at fighter's x.
-		local attack_range = {
-			-- x = self.rect.x - (2 * self.rect.w * (self.flip and 1 or -1)), -- Alternative x, extends based on flip.
-			x = self.rect.x, -- Current x position of the hitbox.
-			y = self.rect.y, -- Current y position of the hitbox.
-			-- w = 2 * self.rect.w, -- Alternative width, wider than the fighter.
-			w = self.rect.w, -- Current width of the hitbox.
-			h = self.rect.h, -- Current height of the hitbox.
-		}
-		self.attack_box = attack_range -- Store the active hitbox.
-
-		-- Check for collision between the attack_range and the target's rectangle.
-		if self:check_collision(attack_range, target.rect) then
-			target.health = target.health - 10 -- Apply damage to the target.
-			target.hit = true -- Set the target's state to hit (stunned).
-		end
+		self.current_target = target -- Store the target for this attack sequence.
+		-- Hitbox activation, calculation, and collision will now be handled in Fighter:update.
+		-- The old self.attack_box is no longer used.
 	end
 end
 
@@ -324,10 +400,26 @@ function Fighter:draw()
 		local h2 = (h / 2) -- Half height for centering.
 		love.graphics.rectangle('line', x - w2, y - h2, w, h)
 
-		-- Draw the fighter's active attack hitbox if it exists.
-		if self.attack_box then
-			love.graphics.rectangle('line', self.attack_box.x, self.attack_box.y, self.attack_box.w, self.attack_box.h)
+		-- Draw the fighter's own hurtbox, color-coded for state.
+		if self.alive then -- Only draw hurtbox if alive
+			local actual_hurtbox_x = self.rect.x + self.hurtbox.offset_x
+			local actual_hurtbox_y = self.rect.y + self.hurtbox.offset_y
+			if self.hurtbox.active then
+				love.graphics.setColor(0, 0, 255, 255) -- Blue for active
+			else
+				love.graphics.setColor(128, 128, 128, 200) -- Grey (semi-transparent) for inactive/invulnerable
+			end
+			love.graphics.rectangle('line', actual_hurtbox_x, actual_hurtbox_y, self.hurtbox.w, self.hurtbox.h)
 		end
+
+		-- Draw the fighter's active hitboxes, in red.
+		if #self.active_hitboxes > 0 then
+			love.graphics.setColor(255, 0, 0, 255) -- Red color for active hitboxes
+			for _, hbox in ipairs(self.active_hitboxes) do
+				love.graphics.rectangle('line', hbox.x, hbox.y, hbox.w, hbox.h)
+			end
+		end
+		love.graphics.setColor(255, 255, 255, 255) -- Reset to white at the end of debug drawings.
 	end
 
 	-- isLutro() block: Specific adjustments for the Lutro (RetroArch LÖVE core) environment.
