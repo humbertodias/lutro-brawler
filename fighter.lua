@@ -455,4 +455,4 @@ function Fighter:check_collision(a, b)
 		and a.y + a.h > b.y -- a's bottom edge is below b's top edge
 end
 
-return Fighter
+return { Fighter = Fighter, Actions = Actions }

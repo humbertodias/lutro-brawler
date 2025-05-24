@@ -6,7 +6,9 @@
 
 -- Require necessary game modules.
 require('global') -- Contains global variables and constants like SCREEN_WIDTH, SCREEN_HEIGHT, COLORS, etc.
-Fighter = require('fighter') -- The Fighter class module.
+local fighterModule = require('fighter') -- Load the fighter module that now returns a table.
+Fighter = fighterModule.Fighter -- Extract the Fighter class from the module.
+Actions = fighterModule.Actions -- Extract the Actions table from the module.
 Input = require('input') -- The input handling module.
 
 -- Game settings and state variables.
