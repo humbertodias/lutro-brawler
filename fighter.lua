@@ -128,10 +128,10 @@ function Fighter:move(screen_width, screen_height, target, round_over)
 	local JOY_UP = Input.isDown(self.player, BTN_UP)
 	local DO_ATTACK1 = Input.once(self.player, BTN_B)
 	local DO_ATTACK2 = Input.once(self.player, BTN_Y)
-	local DO_SELECT = Input.once(self.player, BTN_SELECT) -- Toggle debug mode.
+	local DO_SELECT = Input.once(self.player, BTN_SELECT) -- Toggle hitbox/hurtbox visuals.
 
 	if DO_SELECT then
-		DEBUG = not DEBUG
+		SHOW_HITBOX_HURTBOX_VISUALS = not SHOW_HITBOX_HURTBOX_VISUALS
 	end
 
 	-- Process movement and actions if the fighter is alive, not currently attacking, and the round is not over.
@@ -394,12 +394,16 @@ function Fighter:draw()
 	-- DEBUG block: Draws rectangles for visualization if DEBUG mode is enabled.
 	if DEBUG then
 		-- Draw a rectangle around the fighter's sprite (approximating its visual bounds).
+		-- This remains controlled by the general DEBUG flag.
 		local w = (self.size / self.scale) + 4 -- Width of the debug rectangle.
 		local h = (self.size / self.scale) + 4 -- Height of the debug rectangle.
 		local w2 = (w / 2) -- Half width for centering.
 		local h2 = (h / 2) -- Half height for centering.
 		love.graphics.rectangle('line', x - w2, y - h2, w, h)
+	end
 
+	-- SHOW_HITBOX_HURTBOX_VISUALS block: Draws hitboxes and hurtboxes if this specific flag is enabled.
+	if SHOW_HITBOX_HURTBOX_VISUALS then
 		-- Draw the fighter's own hurtbox, color-coded for state.
 		if self.alive then -- Only draw hurtbox if alive
 			local actual_hurtbox_x = self.rect.x + self.hurtbox.offset_x
@@ -419,7 +423,7 @@ function Fighter:draw()
 				love.graphics.rectangle('line', hbox.x, hbox.y, hbox.w, hbox.h)
 			end
 		end
-		love.graphics.setColor(255, 255, 255, 255) -- Reset to white at the end of debug drawings.
+		love.graphics.setColor(255, 255, 255, 255) -- Reset to white after drawing hitboxes/hurtboxes.
 	end
 
 	-- isLutro() block: Specific adjustments for the Lutro (RetroArch LÖVE core) environment.
