@@ -21,6 +21,12 @@ local AttackType = {
 	ATTACK2 = 2, -- Secondary attack
 }
 
+local HitBoxType = {
+	ATTACK1 = 1,
+	ATTACK2 = 2,
+	HURT = 3
+}
+
 -- Global constants for fighter physics.
 PLAYER_SPEED = 300 -- Movement speed in pixels per second.
 PLAYER_GRAVITY = 3000 -- Acceleration due to gravity in pixels per second squared.
@@ -71,16 +77,8 @@ function Fighter.new(player, x, y, flip, data, sprite_sheet, attack_sound)
 	self.health = 100 -- Current health points.
 	self.alive = true -- True if the fighter is alive.
 	self.attack_box = nil -- Collision box for attacks, created when an attack occurs.
+	self.hurtbox = data.hitbox_config[HitBoxType.HURT] -- Hurtbox collision box.
 
-	-- Initialize hurtbox properties.
-	-- The hurtbox defines the area where the fighter can be hit.
-	self.hurtbox = {}
-	self.hurtbox.w = self.rect.w * 0.75 -- Hurtbox width, default 75% of rectangle width.
-	self.hurtbox.h = self.rect.h * 0.9 -- Hurtbox height, default 90% of rectangle height.
-	-- Horizontal offset from self.rect.x, centers the hurtbox within self.rect.
-	self.hurtbox.offset_x = (self.rect.w - self.hurtbox.w) / 2
-	-- Vertical offset from self.rect.y, positions the hurtbox towards the bottom of self.rect.
-	self.hurtbox.offset_y = self.rect.h - self.hurtbox.h
 	self.hurtbox.active = true -- Hurtbox is active by default.
 
 	return self
@@ -455,4 +453,4 @@ function Fighter:check_collision(a, b)
 		and a.y + a.h > b.y -- a's bottom edge is below b's top edge
 end
 
-return { Fighter = Fighter, Actions = Actions }
+return { Fighter = Fighter, Actions = Actions, HitBoxType = HitBoxType }

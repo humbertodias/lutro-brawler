@@ -11,6 +11,8 @@ Fighter = fighterModule.Fighter -- Extract the Fighter class from the module.
 Actions = fighterModule.Actions -- Extract the Actions table from the module.
 Input = require('input') -- The input handling module.
 
+HitBoxType = fighterModule.HitBoxType -- Extract the HitBoxType table from the fighter module.
+
 -- Game settings and state variables.
 local introCount = 3 -- Counter for the pre-round "3, 2, 1" countdown.
 local lastCountUpdate = 0 -- Timestamp of the last update to introCount, used for timing the countdown.
@@ -69,7 +71,14 @@ local WARRIOR_DATA = {
 		[Actions.ATTACK2] = {
 			{ frame = 4, x_offset = 55, y_offset = 60, w = 65, h = 35 },
 		},
-	},
+		[HitBoxType.HURT] = {
+			w = 40,
+			h = 50,
+			offset_x = 20,
+			offset_y = 50,
+			active = true
+		}
+	}
 }
 
 -- WIZARD_DATA: Contains specific parameters for the Wizard character (same structure as WARRIOR_DATA).
@@ -87,7 +96,14 @@ local WIZARD_DATA = {
 			{ frame = 4, x_offset = 70, y_offset = 70, w = 40, h = 40 },
 			{ frame = 5, x_offset = 70, y_offset = 70, w = 40, h = 40 },
 		},
-	},
+		[HitBoxType.HURT] = {
+			w = 70,
+			h = 100,
+			offset_x = 0,
+			offset_y = 0,
+			active = true
+		}
+	}
 }
 
 -- Starting positions for the fighters.

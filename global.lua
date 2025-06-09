@@ -28,7 +28,7 @@ PAUSE = false
 
 -- SHOW_HITBOX_HURTBOX_VISUALS: A boolean flag specifically for toggling the visibility
 -- of debug hitboxes and hurtboxes. Independent of the general DEBUG flag.
-SHOW_HITBOX_HURTBOX_VISUALS = false
+SHOW_HITBOX_HURTBOX_VISUALS = true
 
 -- isLutro(): A utility function to check if the game is currently running
 -- within the Lutro environment (a LÖVE wrapper primarily used for RetroArch).
