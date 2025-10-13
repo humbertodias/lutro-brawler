@@ -1,18 +1,14 @@
-# Paths
 FRONTEND    := $(shell which retroarch)
 LOVE        := $(shell which love)
 DOCKER      := $(shell which docker)
 UNAME_S     := $(shell uname -s)
 ARCH        := $(shell uname -m)
 PWD         := $(shell pwd)
-# Git versioning
 TAG_NAME    := $(shell git describe --tags --exact-match 2>/dev/null || git rev-parse --short HEAD)
 
-# Lutro core defaults
 LUTRO_CORE  := $(PWD)/lutro_libretro.so
 LUTRO_URL   := https://buildbot.libretro.com/nightly/linux/$(ARCH)/latest/lutro_libretro.so.zip
 
-# macOS overrides
 ifeq ($(UNAME_S), Darwin)
     FRONTEND   := /Applications/RetroArch.app/Contents/MacOS/RetroArch
     LOVE       := /Applications/love.app/Contents/MacOS/love
@@ -20,7 +16,6 @@ ifeq ($(UNAME_S), Darwin)
     LUTRO_URL  := https://buildbot.libretro.com/nightly/apple/osx/$(ARCH)/latest/lutro_libretro.dylib.zip
 endif
 
-# Targets
 .PHONY: run/love run/core lutro clean format get/lutro-core
 
 run/love:
