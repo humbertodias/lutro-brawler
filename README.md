@@ -1,4 +1,5 @@
 [![CD](https://github.com/humbertodias/lutro-brawler/actions/workflows/cd.yml/badge.svg)](https://github.com/humbertodias/lutro-brawler/actions/workflows/cd.yml)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/humbertodias/lutro-brawler)
 ![GitHub all downloads](https://img.shields.io/github/downloads/humbertodias/lutro-brawler/total)
 
 # 🥊 Lutro Brawler
